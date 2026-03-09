@@ -1,0 +1,65 @@
+version: '3.4'
+
+networks:
+  besu_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.238.0/24
+
+services:
+  validator:
+    image: hyperledger/besu:latest
+    container_name: validator
+    ports:
+      - "8545:8545"
+      - "8546:8546"
+      - "30303:30303"
+    volumes:
+      - ./genesis.json:/opt/besu/genesis.json
+      - ./node1/data:/opt/besu/data
+    networks:
+      besu_net:
+        ipv4_address: 172.16.238.10
+    command: [
+      "--genesis-file=/opt/besu/genesis.json",
+      "--data-path=/opt/besu/data",
+      "--network-id=2026",
+      "--rpc-http-enabled",
+      "--rpc-http-host=0.0.0.0",
+      "--rpc-http-cors-origins=*",
+      "--rpc-http-api=ETH,NET,QBFT,WEB3,TXPOOL",
+      "--host-allowlist=*",
+      "--min-gas-price=0",
+      "--sync-mode=FULL"
+    ]
+
+  rpc:
+    image: hyperledger/besu:latest
+    container_name: rpc
+    ports:
+      - "8547:8545"
+      - "8548:8546"
+      - "30304:30303"
+    volumes:
+      - ./genesis.json:/opt/besu/genesis.json
+      - ./node2/data:/opt/besu/data
+    networks:
+      besu_net:
+        ipv4_address: 172.16.238.11
+    command: [
+      "--genesis-file=/opt/besu/genesis.json",
+      "--data-path=/opt/besu/data",
+      "--network-id=2026",
+      "--rpc-http-enabled",
+      "--rpc-http-host=0.0.0.0",
+      "--rpc-http-cors-origins=*",
+      "--rpc-http-api=ETH,NET,QBFT,WEB3,TXPOOL",
+      "--host-allowlist=*",
+      "--min-gas-price=0",
+      "--sync-mode=FULL",
+      "--bootnodes=enode://4ceac943b6a97823bfd7c48305e8e61f3bf847a1a5ce8d40bca40ca7ba4e06b66dce2192e7e51ca331613f925541953148ce45db575b6d71c4470c9f153ffa67@172.16.238.10:30303"
+    ]
+    depends_on:
+      - validator
+

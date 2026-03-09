@@ -1,0 +1,15 @@
+{
+  "config": {
+    "chainId": 2026,
+    "qbft": {
+      "epochLength": 30000,
+      "blockPeriodSeconds": 2
+    },
+    "berlinBlock": 0,
+    "londonBlock": 0,
+    "zeroBaseFee": true
+  },
+  "gasLimit": "0x1fffffffffffff",
+  "difficulty": "0x1",
+  "extraData": "0xf83aa00000000000000000000000000000000000000000000000000000000000000000d594c213a6562e5f179eac7ec5f9eb757c700bbdd7afc080c0"
+}
